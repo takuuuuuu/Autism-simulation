@@ -4,10 +4,25 @@ from collections.abc import Mapping
 import datetime
 import types
 import importlib
-IMPORT_AGENT_BASE_DIR = 'examples.D2A.value_components'
-init_value_info_social = importlib.import_module(
-    f'{IMPORT_AGENT_BASE_DIR}.init_value_info_social')
-value_comp = importlib.import_module(f'{IMPORT_AGENT_BASE_DIR}.value_comp')
+import os
+import sys
+
+# 动态导入 value_comp 模块
+_current_dir = os.path.dirname(os.path.abspath(__file__))
+_parent_dir = os.path.dirname(_current_dir)
+if _parent_dir not in sys.path:
+    sys.path.insert(0, _parent_dir)
+
+# 导入 value_comp 模块
+try:
+    from value_components import value_comp
+except ImportError:
+    try:
+        # 尝试使用 importlib 导入
+        value_comp = importlib.import_module('value_components.value_comp')
+    except ImportError:
+        # 最后尝试：直接导入
+        import value_components.value_comp as value_comp
 from concordia.agents import entity_agent_with_logging
 from concordia.associative_memory import associative_memory
 from concordia.associative_memory import formative_memories

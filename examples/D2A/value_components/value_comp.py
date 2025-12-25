@@ -259,6 +259,17 @@ class desire(agent_components.action_spec_ignored.ActionSpecIgnored):
         qualitative_value = hardcoded_state_NT[self.get_desire_name()][current_value]
         return qualitative_value, "By hard coding"
 
+    def _convert_numeric_desire_to_qualitative_by_hard_coding(self) -> tuple[str, str]:
+        """
+        统一方法，根据智能体名称动态调用AS或NT版本
+        """
+        agent_name = self.get_entity().name
+        # 如果智能体名称是'Sheldon'，使用AS版本，否则使用NT版本
+        if agent_name == 'Sheldon':
+            return self._convert_numeric_desire_to_qualitative_by_hard_coding_AS()
+        else:
+            return self._convert_numeric_desire_to_qualitative_by_hard_coding_NT()
+
     def _make_pre_act_value(self) -> str:
 
         updated_log = dict()#################3

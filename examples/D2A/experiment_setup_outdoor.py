@@ -9,7 +9,7 @@ from concordia.language_model import utils
 import openai
 
 # the root path of the project, this is used to import the D2A module
-ROOT = r""
+ROOT = r"/Users/takuuuu/Projects/Autism-simulation/examples/D2A"
 
 # how many episodes in each simulation, each episode is 20 minutes
 episode_length = 6
@@ -76,7 +76,7 @@ def get_language_model_with_retry(api_type, model_name, api_key, disable_languag
 # you can also use other models, detailed see the definition of language_model_setup
 api_type = 'openai'
 model_name = 'deepseek-v3'
-api_key=''
+api_key='sk-wfHZW0o4ss75rxp2briUPMNUcpFPpLghl7u67qzsUXKBgQ0w'
 openai.log = 'debug'
 device = 'cpu'
 model = utils.language_model_setup(

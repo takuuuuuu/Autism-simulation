@@ -18,10 +18,30 @@ from concordia.typing import entity_component
 from concordia.utils import measurements as measurements_lib
 from concordia.components.agent import memory_component
 import importlib
-IMPORT_AGENT_BASE_DIR = 'examples.D2A.value_components'
-init_value_info_social = importlib.import_module(
-    f'{IMPORT_AGENT_BASE_DIR}.init_value_info_social')
-value_comp = importlib.import_module(f'{IMPORT_AGENT_BASE_DIR}.value_comp')
+import os
+import sys
+
+# 动态获取value_components模块路径
+_current_dir = os.path.dirname(os.path.abspath(__file__))
+_parent_dir = os.path.dirname(_current_dir)
+if _parent_dir not in sys.path:
+    sys.path.insert(0, _parent_dir)
+
+# 尝试使用相对路径导入
+try:
+    from value_components import init_value_info_social
+    from value_components import value_comp
+except ImportError:
+    # 如果相对导入失败，尝试使用绝对路径
+    try:
+        IMPORT_AGENT_BASE_DIR = 'examples.D2A.value_components'
+        init_value_info_social = importlib.import_module(
+            f'{IMPORT_AGENT_BASE_DIR}.init_value_info_social')
+        value_comp = importlib.import_module(f'{IMPORT_AGENT_BASE_DIR}.value_comp')
+    except ImportError:
+        # 最后尝试：直接导入
+        import value_components.init_value_info_social as init_value_info_social
+        import value_components.value_comp as value_comp
 
 
 import NullObservation
@@ -244,8 +264,16 @@ def build_D2A_agent(
     general_pre_act_label = f"\n{agent_name}" + "'s current feeling of {desire_name} is"
 
     ### init the information to be used in the value component
+    import time as time_module
+    print(f'        [build_D2A_agent] 开始预处理value信息...')
+    t_preprocess_start = time_module.time()
     detailed_values_dict, expected_values = init_value_info_social.preprocess_value_information(context_dict, predefined_setting, selected_desire,agent_category)
+    print(f'        [build_D2A_agent] 预处理完成，用时: {time_module.time() - t_preprocess_start:.2f}秒')
+    
+    print(f'        [build_D2A_agent] 开始创建desire组件 (共 {len(selected_desire)} 个)...')
+    t_desire_start = time_module.time()
     all_desire_components = init_value_info_social.get_all_desire_components(model, general_pre_act_label, observation, clock, measurements, detailed_values_dict, expected_values, wanted_desires=selected_desire)
+    print(f'        [build_D2A_agent] desire组件创建完成，用时: {time_module.time() - t_desire_start:.2f}秒')
 
 
     target_tracking_desire_component = dict()

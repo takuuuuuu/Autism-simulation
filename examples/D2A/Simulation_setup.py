@@ -7,10 +7,12 @@ from value_components.hardcoded_value_state import hardcoded_state_NT
 from value_components.hardcoded_value_state import hardcoded_state_AS
 
 # the root path of the project, this is used to import the D2A module
-ROOT = r"D:\codes\Autism-simulation"
+# 动态获取项目根目录（向上两级从 examples/D2A 到项目根目录）
+_current_file_dir = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(os.path.dirname(_current_file_dir))
 
 # how many episodes in each simulation, each episode is 20 minutes
-episode_length = 1
+episode_length = 3
 # NUM_PLAYERS is the number of NT players in the simulation
 NUM_PLAYERS = 1
 
@@ -44,7 +46,7 @@ else:
 # you can also use other models, detailed see the definition of language_model_setup
 api_type = 'openai'
 model_name = 'gpt-4o-mini'
-api_key='sk-iEI0qYvpEFmYOuX8jmTxSF4kCn9JbSFN4dCR73Mvd3VeAmZC'
+api_key=''
 device = 'cpu'
 model = utils.language_model_setup(
     api_type=api_type,
